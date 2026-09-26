@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<!-- IMPORTANT FOR PHONES -->
+
+<meta name="viewport"
+   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Happy Anniversary ❤️</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+}
+
+/* =========================
+   TAP SCREEN
+========================= */
+
+#startScreen {
+    position: fixed;
+    inset: 0;
+    background: black;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: clamp(22px, 6vw, 30px);
+    text-align: center;
+
+    cursor: pointer;
+    z-index: 100;
+    padding: 20px;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+#messageBox {
+    position: fixed;
+    inset: 0;
+
+    background: black;
+    color: white;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    flex-direction: column;
+    text-align: center;
+
+    padding: 25px;
+}
+
+#typingText {
+    width: 100%;
+    max-width: 600px;
+
+    font-size: clamp(18px, 5vw, 24px);
+    line-height: 1.6;
+
+    margin: 0;
+}
+
+#nextBtn {
+    margin-top: 30px;
+
+    padding: 13px 25px;
+
+    border: none;
+    border-radius: 25px;
+
+    background: white;
+    color: black;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    min-height: 48px;
+    min-width: 120px;
+}
+
+#nextBtn:active {
+    transform: scale(0.95);
+}
+
+/* =========================
+   BOOK
+========================= */
+
+.book {
+    width: min(75vw, 320px);
+    height: min(110vw, 430px);
+
+    max-height: 75vh;
+
+    margin: auto;
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    perspective: 1500px;
+
+    display: none;
+
+    touch-action: pan-y;
+}
+
+/* PAGE */
+
+.page {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    transform-origin: left center;
+
+    transition:
+        transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+
+    backface-visibility: hidden;
+
+    -webkit-backface-visibility: hidden;
+
+    user-select: none;
+    -webkit-user-select: none;
+
+    cursor: grab;
+}
+
+.page:active {
+    cursor: grabbing;
+}
+
+.page img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    border-radius: 10px;
+
+    pointer-events: none;
+
+    box-shadow:
+        0 10px 30px rgba(255,255,255,0.12);
+}
+
+.flipped {
+    transform: rotateY(-180deg);
+}
+
+/* =========================
+   SWIPE HINT
+========================= */
+
+#swipeHint {
+    position: fixed;
+
+    bottom: 20px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    color: rgba(255,255,255,0.7);
+
+    font-size: 14px;
+
+    text-align: center;
+
+    z-index: 50;
+
+    pointer-events: none;
+}
+
+/* =========================
+   HEARTS
+========================= */
+
+.heart {
+    position: fixed;
+
+    color: red;
+
+    font-size: clamp(18px, 5vw, 25px);
+
+    animation: floatUp 2s linear forwards;
+
+    pointer-events: none;
+
+    z-index: 200;
+}
+
+@keyframes floatUp {
+
+    from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-200px) scale(1.4);
+        opacity: 0;
+    }
+}
+
+/* =========================
+   ENDING
+========================= */
+
+#ending {
+    position: fixed;
+    inset: 0;
+
+    background: black;
+
+    color: white;
+
+    display: none;
+
+    overflow: hidden;
+
+    text-align: center;
+}
+
+#ending::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0,0,0,0.8);
+
+    z-index: 1;
+}
+
+#scrollText {
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    width: 100%;
+    padding: 20px;
+
+    text-align: center;
+
+    font-size: clamp(18px, 5vw, 26px);
+    line-height: 1.8;
+
+    z-index: 2;
+
+    animation: scrollUp 180s linear forwards;
+}
+
+@keyframes scrollUp {
+
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-180%);
+    }
+
+}
+
+/* =========================
+   GLOW
+========================= */
+
+.glow {
+    font-size: clamp(24px, 7vw, 34px);
+
+    color: pink;
+
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+
+    from {
+        text-shadow: 0 0 10px pink;
+    }
+
+    to {
+        text-shadow: 0 0 25px red;
+    }
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-height: 650px) {
+
+    .book {
+        width: min(65vw, 280px);
+        height: min(85vh, 380px);
+    }
+
+    #swipeHint {
+        bottom: 8px;
+    }
+}
+
+/* =========================
+   LANDSCAPE
+========================= */
+
+@media (orientation: landscape) {
+
+    .book {
+        width: min(35vw, 300px);
+        height: min(80vh, 400px);
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- MUSIC -->
+<audio id="music" loop>
+    <source src="A Thousand Years.mp3" type="audio/mpeg">
+</audio>
+
+</head>
+```[cite: 2]
+
+<!-- TAP SCREEN -->
+
+<div id="startScreen">
+    Tap to Open ❤️
+</div>
+
+<!-- MESSAGE -->
+
+<div id="messageBox">
+
+```
+<p id="typingText"></p>
+
+<button id="nextBtn">
+    Next ➡️
+</button>
+```
+
+</div>
+
+<!-- BOOK -->
+
+<div class="book" id="book">
+
+```
+<div class="page" style="z-index:11">
+    <img src="img1.png">
+</div>
+
+<div class="page" style="z-index:10">
+    <img src="img2.png">
+</div>
+
+<div class="page" style="z-index:9">
+    <img src="img3.png">
+</div>
+
+<div class="page" style="z-index:8">
+    <img src="img4.png">
+</div>
+
+<div class="page" style="z-index:7">
+    <img src="img5.png">
+</div>
+
+<div class="page" style="z-index:6">
+    <img src="img6.png">
+</div>
+
+<div class="page" style="z-index:5">
+    <img src="img7.png">
+</div>
+
+<div class="page" style="z-index:4">
+    <img src="img8.png">
+</div>
+
+<div class="page" style="z-index:3">
+    <img src="img9.png">
+</div>
+
+<div class="page" style="z-index:2">
+    <img src="img10.png">
+</div>
+
+<div class="page" style="z-index:1">
+    <img src="img11.png">
+</div>
+```
+
+</div>
+
+<div id="swipeHint">
+    Swipe ← to turn the page
+</div>
+
+<!-- ENDING -->
+
+<div id="ending">
+
+```
+<div id="scrollText">
+
+    <p>
+        Happy 1 Year Ayesha/Renli/Lady Boss, Today October 11 was the day we 1st met. Live ma mute khayera timlai msg gareko thea and that was the best decision.❤️
+    </p>
+
+    <p>
+ Since that day we started talking sharing our sad and happy moments. When I started talking to u, I though u r like other girls but I was totally wrong. I moment I knew that u have grown up without ur parents I felt very sad🥺🥹. 
+Timi China gako bela like u left ur id ne taaa aane malai k lageko theo vanda chai,"I will never find u ever" but luckily when I was scrolling I saw a reel and hero vai le timlai tag gareko theo "aayu dd" something like this and malai lagyo ki timi ho and guess what We met again at 8 March. We get to meet after _ month_ days. And I was very Happy to meet u again. After that we become friends shared more information about each other, get to know each other moree . After that we talk a lot and 1 day u sent me a reel about bestfriend and we became best friends🫶🏻. We also promised to meet and explore the whole world together🫢😌. We became homies like homeboy and homegirl😼. Malai aajhai yaad xa "Maile Ur crush suho vanda timle maybe its u" vaneko. Our friendship become more stronger because of same energy and flirting 😉😜 and 1 day I collected my strength and said "Lovee yaaa and u replies Luvvv yaaa" and I was happy 😉. Aane we played together, we laughed together, we became happy together. Aane maile Love you vanda timle ✌️ vaneko and u get that 2 and while going off u also replied 2 soo 🫶🏻😁😉. But timro dd le tha paunu voo and then we barely talked😔. But Today at 11th October I promise u that 1 day I will surely meet u and take u to a world tour like vacation and we will travel whole world together and don't worry about your sister its on me to convince her and 1 day she will definitely agree I promise and I will prove her that all men r not same 🤧🤧🥹. But for now I m taking u as my girlfriend and remember that you r only mine 💝 and I swear I won't talk to other girl neither see them, only 4 girls : My mom, Ayesha, Renli and Lady Boss😌😌. Just wait for me until 25 and I will ofcourse waif for u till then too meet u 😉🫶🫶✌️🫴🫴
+Aane dherai kura hru miss vako xa I know and I didnt include cuz it would make longer and it would make difficult to read soo this much only we will talk after I meet u there😉. Take care of yourself and ur sister, be strong, Have good days ahead and most importantly just wait for me I swear it will be worth it🥹🤧.
+
+
+    </p>
+
+    <p class="glow">
+        Your Yeobo....
+    </p>
+
+    <p class="glow">
+       From your heart ❤️
+    </p>
+
+     <p class="glow">
+     Once again Happy Anniversary ❤️
+     </p>  
+     
+    </div>
+```
+
+</div>
+
+<script>
+
+const startScreen =
+    document.getElementById("startScreen");
+
+const messageBox =
+    document.getElementById("messageBox");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+const book =
+    document.getElementById("book");
+
+const pages =
+    document.querySelectorAll(".page");
+
+const ending =
+    document.getElementById("ending");
+
+const music =
+    document.getElementById("music");
+
+const swipeHint =
+    document.getElementById("swipeHint");
+
+
+/* =========================
+   TYPING MESSAGE
+========================= */
+
+const text =
+    "Write your personal message here...";
+
+let typingIndex = 0;
+
+function typeWriter() {
+
+    if (typingIndex < text.length) {
+
+        document.getElementById("typingText")
+            .textContent += text.charAt(typingIndex);
+
+        typingIndex++;
+
+        setTimeout(typeWriter, 40);
+    }
+}
+
+
+/* =========================
+   START
+========================= */
+
+startScreen.addEventListener("click", () => {
+
+    startScreen.style.display = "none";
+
+    messageBox.style.display = "flex";
+
+    /*
+       Music starts after user interaction.
+       This works much better with iPhone.
+    */
+
+    music.volume = 0.35;
+
+    music.play().catch(() => {});
+
+    typeWriter();
+
+});
+
+
+/* =========================
+   NEXT
+========================= */
+
+nextBtn.addEventListener("click", () => {
+
+    messageBox.style.display = "none";
+
+    book.style.display = "block";
+
+    swipeHint.style.display = "block";
+
+});
+
+
+/* =========================
+   SWIPE
+========================= */
+
+let startX = 0;
+let startY = 0;
+
+book.addEventListener("touchstart", (event) => {
+
+    startX = event.touches[0].clientX;
+    startY = event.touches[0].clientY;
+
+}, { passive: true });
+
+
+book.addEventListener("touchend", (event) => {
+
+    const endX =
+        event.changedTouches[0].clientX;
+
+    const endY =
+        event.changedTouches[0].clientY;
+
+    const differenceX =
+        startX - endX;
+
+    const differenceY =
+        startY - endY;
+
+    /*
+       Only flip if the gesture is
+       mainly horizontal.
+    */
+
+    if (Math.abs(differenceX) > 50 &&
+        Math.abs(differenceX) > Math.abs(differenceY)) {
+
+        if (differenceX > 0) {
+
+            flipPage();
+
+        } else {
+
+            prevPage();
+
+        }
+
+    }
+
+}, { passive: true });
+
+
+/* =========================
+   DESKTOP MOUSE SUPPORT
+========================= */
+
+let mouseStartX = 0;
+let mouseDown = false;
+
+book.addEventListener("mousedown", (event) => {
+
+    mouseDown = true;
+
+    mouseStartX = event.clientX;
+
+});
+
+
+document.addEventListener("mouseup", (event) => {
+
+    if (!mouseDown) return;
+
+    mouseDown = false;
+
+    const difference =
+        mouseStartX - event.clientX;
+
+    if (Math.abs(difference) > 50) {
+
+        if (difference > 0) {
+
+            flipPage();
+
+        } else {
+
+            prevPage();
+
+        }
+
+    }
+
+});
+
+
+/* =========================
+   PAGE FLIP
+========================= */
+
+let currentPage = 0;
+
+function flipPage() {
+
+    if (currentPage >= pages.length)
+        return;
+
+    pages[currentPage]
+        .classList.add("flipped");
+
+    createHearts();
+
+    currentPage++;
+
+    /*
+       Hide hint after first page.
+    */
+
+    if (currentPage > 0) {
+
+        swipeHint.style.display = "none";
+
+    }
+
+    /*
+       Show ending after final page.
+    */
+
+    if (currentPage === pages.length) {
+
+        setTimeout(showEnding, 1200);
+
+    }
+
+}
+
+
+/* =========================
+   PREVIOUS PAGE
+========================= */
+
+function prevPage() {
+
+    if (currentPage <= 0)
+        return;
+
+    currentPage--;
+
+    pages[currentPage]
+        .classList.remove("flipped");
+
+}
+
+
+/* =========================
+   HEARTS
+========================= */
+
+function createHearts() {
+
+    for (let i = 0; i < 5; i++) {
+
+        const heart =
+            document.createElement("div");
+
+        heart.className = "heart";
+
+        heart.textContent = "❤️";
+
+        heart.style.left =
+            Math.random() * window.innerWidth + "px";
+
+        heart.style.top = "60%";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+
+            heart.remove();
+
+        }, 2000);
+
+    }
+
+}
+
+
+/* =========================
+   ENDING
+========================= */
+
+function showEnding() {
+
+    book.style.display = "none";
+
+    swipeHint.style.display = "none";
+
+    ending.style.display = "block";
+
+
+    /*
+       Fade music out slowly.
+    */
+
+    let fade =
+        setInterval(() => {
+
+            if (music.volume > 0.02) {
+
+                music.volume =
+                    Math.max(0, music.volume - 0.02);
+
+            } else {
+
+                music.pause();
+
+                clearInterval(fade);
+
+            }
+
+        }, 200);
+
+}
+
+</script>
+
+</body>
+</html>
